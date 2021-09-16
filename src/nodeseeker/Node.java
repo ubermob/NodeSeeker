@@ -2,14 +2,13 @@ package nodeseeker;
 
 public class Node {
 
-	private final int id;
-	private final int x, y, z;
+	private final int id, x, y, z;
 
 	public Node(int id, double x, double y, double z) {
 		this.id = id;
-		this.x = (int) Math.round(x * 1000);
-		this.y = (int) Math.round(y * 1000);
-		this.z = (int) Math.round(z * 1000);
+		this.x = (int) Math.round(x * NodeSeeker.multiplier);
+		this.y = (int) Math.round(y * NodeSeeker.multiplier);
+		this.z = (int) Math.round(z * NodeSeeker.multiplier);
 	}
 
 	public int getId() {
@@ -30,5 +29,10 @@ public class Node {
 
 	public int getHash() {
 		return x + y + z;
+	}
+
+	@Override
+	public String toString() {
+		return String.format(NodeSeeker.properties.getProperty("node_to_string"), id, x, y, z);
 	}
 }

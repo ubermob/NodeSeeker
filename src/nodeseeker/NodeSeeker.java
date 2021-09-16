@@ -1,114 +1,93 @@
 package nodeseeker;
 
+import utools.stopwatch.Stopwatch;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.RunnableFuture;
+import java.util.Properties;
 
 public class NodeSeeker {
-	/**
-	 * Consume path to file
-	 *
-	 * @param path {@code String} path to file
-	 * @throws {@link IOException}
-	 */
-	public static void file(String path) throws IOException {
-		List<String> strings = Files.readAllLines(Paths.get(path));
-		match(strings);
+
+	protected static Properties properties;
+	private static byte nodeAccuracy;
+	protected static int multiplier;
+	protected static List<Node> list;
+
+	static {
+		properties = new Properties();
+		try (InputStream stream = NodeSeeker.class.getResourceAsStream("/Properties.txt")) {
+			properties.load(stream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		nodeAccuracy = Byte.parseByte(getProperty("node_accuracy"));
+		multiplier = 1;
+		for (byte i = 0; i < nodeAccuracy; i++) {
+			multiplier = multiplier * 10;
+		}
+		ExcelReader.noDataRows = Integer.parseInt(getProperty("no_data_rows"));
+		ExcelReader.idCellNumber = Integer.parseInt(getProperty("id_cell_number"));
+		ExcelReader.xCellNumber = Integer.parseInt(getProperty("x_cell_number"));
+		ExcelReader.yCellNumber = Integer.parseInt(getProperty("y_cell_number"));
+		ExcelReader.zCellNumber = Integer.parseInt(getProperty("z_cell_number"));
 	}
 
-	public static void test(List<String> list) throws InterruptedException {
-		/*int size = list.size() / 3;
-		Thread t1 = new Thread(new Seeker(list, 0, size));
-		t1.start();
-		Thread t2 = new Thread(new Seeker(list, size, list.size()));
-		t2.start();
-		t1.join();
-		t2.join();*/
-	}
-
-	public static void test2(List<String> list) throws InterruptedException {
-		/*int[] i = four(list.size());
-		Thread t1 = new Thread(new Seeker(list, 0, i[0]));
-		Thread t2 = new Thread(new Seeker(list, i[0], i[1]));
-		Thread t3 = new Thread(new Seeker(list, i[1], i[2]));
-		Thread t4 = new Thread(new Seeker(list, i[2], list.size()));
-		t1.start();
-		t2.start();
-		t3.start();
-		t4.start();
-		t1.join();
-		t2.join();
-		t3.join();
-		t4.join();*/
-	}
-
-	public static void test3(List<Node> list) throws InterruptedException {
-		int[] i = four(list.size());
-		Thread t1 = new Thread(new Seeker(list, 0, i[0]));
-		Thread t2 = new Thread(new Seeker(list, i[0], i[1]));
-		Thread t3 = new Thread(new Seeker(list, i[1], i[2]));
-		Thread t4 = new Thread(new Seeker(list, i[2], list.size()));
-		t1.start();
-		t2.start();
-		t3.start();
-		t4.start();
-		t1.join();
-		t2.join();
-		t3.join();
-		t4.join();
-	}
-
-	public static int[] four(int i) {
-		double k = 1 - 0.707;
-		int a, b, c;
-		b = (int) Math.floor(i * k);
-		a = b / 2;
-		c = (int) (Math.floor((i - b) * k) + b);
-		/*System.out.println(a);
-		System.out.println(b);
-		System.out.println(c);*/
-		return new int[]{a, b, c};
-	}
-
-	private static void match(List<String> list, int a, int b) {
-		for (int i = a; i < b; i++) {
-			for (int j = i + 1; j < list.size(); j++) {
-				try {
-					String[] first = {list.get(i)};
-					String[] second = {list.get(j)};
-					first = first[0].split("\t");
-					second = second[0].split("\t");
-					if (first[4].charAt(0) == second[4].charAt(0)) {
-						if (match(first, second)) {
-							System.out.println("Match: " + first[0] + "-" + second[0]);
-						}
-					}
-				} catch (IndexOutOfBoundsException ignored) {
-				}
-			}
+	public static void consumeFile(String path) throws IOException {
+		if (Files.exists(Path.of(path))) {
+			list = ExcelReader.parse(path);
 		}
 	}
 
-	private static void match(List<String> list) {
-		for (int i = 0; i < list.size(); i++) {
-			for (int j = i + 1; j < list.size(); j++) {
-				try {
-					String[] first = {list.get(i)};
-					String[] second = {list.get(j)};
-					first = first[0].split("\t");
-					second = second[0].split("\t");
-					if (match(first, second)) {
-						System.out.println("Match: " + first[0] + "-" + second[0]);
-					}
-				} catch (IndexOutOfBoundsException ignored) {
-				}
+	public static void start() throws InterruptedException {
+		Stopwatch s2 = new Stopwatch();
+		s2.appendBefore(getProperty("sorted_in") + " ");
+		HashMap<Integer, List<Node>> hashMap = new HashMap<>();
+		for (var v : list) {
+			int hash = v.getHash();
+			List<Node> localList;
+			if (hashMap.containsKey(hash)) {
+				localList = hashMap.get(hash);
+				localList.add(v);
+			} else {
+				localList = new ArrayList<>();
+				localList.add(v);
+				hashMap.put(hash, localList);
 			}
+		}
+		s2.print();
+		Stopwatch s3 = new Stopwatch();
+		s3.appendBefore(getProperty("matched_in") + " ");
+		for (var v : hashMap.entrySet()) {
+			List<Node> value = v.getValue();
+			if (value.size() > 1) {
+				Thread thread = new Thread(new RunnableSeeker(value, 0, value.size()));
+				thread.start();
+				thread.join();
+			}
+		}
+		s3.print();
+	}
+
+	public static String getProperty(String key) {
+		return properties.getProperty(key);
+	}
+
+	public static void setNodeAccuracy(int nodeAccuracy) {
+		if (nodeAccuracy >= 0) {
+			NodeSeeker.nodeAccuracy = (byte) nodeAccuracy;
 		}
 	}
 
-	private static boolean match(String[] first, String[] second) {
-		return first[1].equals(second[1]) && first[2].equals(second[2]) && first[3].equals(second[3]);
+	public static byte getNodeAccuracy() {
+		return nodeAccuracy;
+	}
+
+	public static int getListSize() {
+		return list.size();
 	}
 }
