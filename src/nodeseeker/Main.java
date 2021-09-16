@@ -6,7 +6,45 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
+
 	public static void main(String[] args) throws IOException, InterruptedException {
+		Stopwatch s1 = new Stopwatch();
+		//List<Node> list = Excel.parse("I:\\NodeSeeker\\Дружинниковская 17.xls");
+		List<Node> list = Excel.parse("I:\\NodeSeeker\\nodes.xls");
+		System.out.println("Excel read");
+		s1.print();
+		System.out.println("List size:");
+		System.out.println(list.size());
+		Stopwatch s2 = new Stopwatch();
+		HashMap<Integer, List<Node>> hashMap = new HashMap<>();
+		for (var v : list) {
+			var hash = v.getHash();
+			List<Node> localList;
+			if (hashMap.containsKey(hash)){
+				localList = hashMap.get(hash);
+				localList.add(v);
+			} else {
+				localList = new ArrayList<>();
+				localList.add(v);
+				hashMap.put(hash, localList);
+			}
+		}
+		System.out.println("Sorted");
+		s2.print();
+		Stopwatch s3 = new Stopwatch();
+		for (var v : hashMap.entrySet()) {
+			Integer key = v.getKey();
+			List<Node> value = v.getValue();
+			if (value.size() > 1) {
+				Thread thread = new Thread(new Seeker(value, 0, value.size()));
+				thread.start();
+				thread.join();
+			}
+		}
+		s3.print();
+	}
+
+	public static void main2(String[] args) throws IOException, InterruptedException {
 		Scanner scanner = new Scanner(System.in);
 		//System.out.println("Input path to file:");
 		List<String> strings = Files.readAllLines(Paths.get("F:\\FILES\\nodeseeker\\fp.txt")); // scanner.nextLine

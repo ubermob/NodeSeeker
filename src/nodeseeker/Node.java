@@ -27,4 +27,8 @@ public class Node {
 	public int getZ() {
 		return z;
 	}
+
+	public int getHash() {
+		return x + y + z;
+	}
 }
