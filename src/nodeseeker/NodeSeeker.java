@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Manage this utility.
+ * Managing this utility.
  *
  * @author Andrey Korneychuk on 17-Sep-21
  * @version 1.0
@@ -26,7 +26,7 @@ public class NodeSeeker {
 
 	static {
 		properties = new Properties();
-		try (InputStream stream = NodeSeeker.class.getResourceAsStream("/Properties.txt")) {
+		try (InputStream stream = NodeSeeker.class.getResourceAsStream("/Node_seeker_properties.txt")) {
 			properties.load(stream);
 		} catch (IOException e) {
 			e.printStackTrace();
