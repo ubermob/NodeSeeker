@@ -14,7 +14,7 @@ import java.util.Properties;
 /**
  * Manage this utility.
  *
- * @author Andrey Kornechuk on 17-Sep-21
+ * @author Andrey Korneychuk on 17-Sep-21
  * @version 1.0
  */
 public class NodeSeeker {

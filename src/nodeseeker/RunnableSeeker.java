@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Realize node matching.
  *
- * @author Andrey Kornechuk on 17-Sep-21
+ * @author Andrey Korneychuk on 17-Sep-21
  * @version 1.0
  */
 public class RunnableSeeker implements Runnable {
