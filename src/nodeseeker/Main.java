@@ -7,12 +7,19 @@ import java.util.Scanner;
 
 import static nodeseeker.NodeSeeker.getProperty;
 
+/**
+ * @author Andrey Kornechuk on 17-Sep-21
+ * @version 1.0
+ */
 public class Main {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println(getProperty("path_to"));
 		String path = scanner.nextLine();
+		if (!path.endsWith(getProperty("excel_extension"))) {
+			path += getProperty("excel_extension");
+		}
 		Stopwatch s1 = new Stopwatch();
 		Stopwatch totalTime = new Stopwatch();
 		totalTime.appendBefore("Total elapsed time: ");

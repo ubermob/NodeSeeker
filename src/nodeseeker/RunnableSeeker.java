@@ -2,11 +2,24 @@ package nodeseeker;
 
 import java.util.List;
 
+/**
+ * Realize node matching.
+ *
+ * @author Andrey Kornechuk on 17-Sep-21
+ * @version 1.0
+ */
 public class RunnableSeeker implements Runnable {
 
 	private final List<Node> list;
 	private final int from, to;
 
+	/**
+	 * Constructor can skip list pieces for multithreading seek.
+	 *
+	 * @param list seeking list
+	 * @param from start matching position
+	 * @param to   end matching position
+	 */
 	public RunnableSeeker(List<Node> list, int from, int to) {
 		this.list = list;
 		this.from = from;
@@ -29,6 +42,13 @@ public class RunnableSeeker implements Runnable {
 		}
 	}
 
+	/**
+	 * Match two nodes.
+	 *
+	 * @param a first node
+	 * @param b second node
+	 * @return true - if nodes are in the same place
+	 */
 	private boolean match(Node a, Node b) {
 		return a.getX() == b.getX() && a.getY() == b.getY() && a.getZ() == b.getZ();
 	}

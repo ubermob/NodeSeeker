@@ -11,3 +11,4 @@ list_size=List size: %d
 done=Done
 sorted_in=Sorted in
 matched_in=Matched in
+excel_extension=.xls
