@@ -20,9 +20,11 @@ public class RunnableSeeker implements Runnable {
 	/**
 	 * Constructor can skip list pieces for multithreading seek.
 	 *
-	 * @param list seeking list
-	 * @param from start matching position
-	 * @param to   end matching position
+	 * @param list       seeking list
+	 * @param from       start matching position
+	 * @param to         end matching position
+	 * @param properties {@link NodeSeekerProperties} loaded properties
+	 * @param notify     {@link NodeSeekerNotify} interface for listener pattern
 	 */
 	public RunnableSeeker(List<Node> list, int from, int to
 			, NodeSeekerProperties properties, NodeSeekerNotify notify) {

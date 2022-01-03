@@ -18,10 +18,12 @@ public class Node {
 	 * Multiplier must be set in {@link NodeSeeker} before this exemplar will be create.
 	 * Default value of multiplier you can see in properties file.
 	 *
-	 * @param id id of node
-	 * @param x  x coordinate
-	 * @param y  y coordinate
-	 * @param z  z coordinate
+	 * @param id         id of node
+	 * @param x          x coordinate
+	 * @param y          y coordinate
+	 * @param z          z coordinate
+	 * @param multiplier decimal view of node coordinates accuracy
+	 * @param properties {@link NodeSeekerProperties} loaded properties
 	 */
 	public Node(int id, double x, double y, double z, int multiplier, NodeSeekerProperties properties) {
 		this.id = id;

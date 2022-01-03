@@ -80,7 +80,8 @@ public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 	 * If you want add more {@link NodeSeekerListener}, use {@code addListener();}
 	 * method before invoke this.
 	 *
-	 * @throws InterruptedException
+	 * @throws InterruptedException if thread is waiting, sleeping, or otherwise occupied,
+	 * and the thread is interrupted, either before or during the activity
 	 */
 	public void start() throws InterruptedException {
 		Stopwatch s2 = new Stopwatch();

@@ -24,7 +24,7 @@ public class AbaqusInputReader {
 	 * @param multiplier decimal view of node coordinates accuracy
 	 * @param properties {@link NodeSeekerProperties} loaded properties
 	 * @return list with nodes
-	 * @throws IOException
+	 * @throws IOException if an I/O error occurs
 	 */
 	public static List<Node> parse(String path, int multiplier
 			, NodeSeekerProperties properties) throws IOException {
