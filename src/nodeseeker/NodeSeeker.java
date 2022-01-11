@@ -12,16 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Managing this utility.
  *
  * @author Andrey Korneychuk on 17-Sep-21
- * @version 1.1
+ * @version 1.2
  */
 public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 
@@ -47,6 +44,24 @@ public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 		readProperties();
 		listeners = new ArrayList<>(2);
 		listeners.add(new ConsoleListener());
+	}
+
+	/**
+	 * Realize and setup class for use.<br>
+	 * Read default {@link Properties},
+	 * add your {@link ConsoleListener} to {@link NodeSeekerListener} list.
+	 *
+	 * @param listeners that will be notify
+	 */
+	public NodeSeeker(NodeSeekerListener... listeners) {
+		properties = new Properties();
+		try (InputStream stream = NodeSeeker.class.getResourceAsStream("/Node_seeker_properties.txt")) {
+			properties.load(stream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		readProperties();
+		this.listeners = new ArrayList<>(Arrays.asList(listeners));
 	}
 
 	/**
@@ -81,7 +96,7 @@ public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 	 * method before invoke this.
 	 *
 	 * @throws InterruptedException if thread is waiting, sleeping, or otherwise occupied,
-	 * and the thread is interrupted, either before or during the activity
+	 *                              and the thread is interrupted, either before or during the activity
 	 */
 	public void start() throws InterruptedException {
 		Stopwatch s2 = new Stopwatch();
@@ -184,6 +199,13 @@ public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 	 */
 	public void addListener(NodeSeekerListener listener) {
 		listeners.add(listener);
+	}
+
+	/**
+	 * Clear {@link NodeSeekerListener} list.
+	 */
+	public void clearListenerList() {
+		listeners.clear();
 	}
 
 	/**

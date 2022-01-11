@@ -1,6 +1,8 @@
 package nodeseeker;
 
 /**
+ * Properties interface.
+ *
  * @author Andrey Korneychuk on 25-Dec-21
  * @version 1.0
  */
