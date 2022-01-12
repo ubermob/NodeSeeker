@@ -8,6 +8,7 @@ node_to_string=Node{id=%d, x=%d, y=%d, z=%d}
 path_to=Enter path to *.xls file
 node_accuracy=3
 list_size=List size: %d
+start=Started
 done=Done
 sorted_in=Sorted in
 matched_in=Matched in

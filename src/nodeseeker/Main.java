@@ -27,6 +27,5 @@ public class Main {
 		System.out.println(String.format(nodeSeeker.getProperty("list_size"), nodeSeeker.getListSize()));
 		nodeSeeker.start();
 		totalTime.print();
-		System.out.println(nodeSeeker.getProperty("done"));
 	}
 }

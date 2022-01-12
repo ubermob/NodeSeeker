@@ -101,6 +101,7 @@ public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 	public void start() throws InterruptedException {
 		Stopwatch s2 = new Stopwatch();
 		s2.appendBefore(getProperty("sorted_in") + " ");
+		notify(getProperty("start"));
 		HashMap<Integer, List<Node>> hashMap = new HashMap<>();
 		for (var v : list) {
 			int hash = v.getHash();
@@ -132,6 +133,7 @@ public class NodeSeeker implements NodeSeekerProperties, NodeSeekerNotify {
 			}
 		}
 		notify(s3.getPrettyString());
+		notify(getProperty("done"));
 	}
 
 	/**
